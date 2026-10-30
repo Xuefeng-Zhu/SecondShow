@@ -1,6 +1,8 @@
 /** Explicit opt-in: real Qloo and Nebius calls; uses only fictional sample data. */
 import {chromium,expect} from '@playwright/test';
-import {startCapture} from '/Users/frank/.codex/plugins/cache/openai-curated-remote/demo-videos/0.3.1/skills/create-demo-video/scripts/capture.mjs';
+const captureModule = process.env.SECONDSHOW_CAPTURE_MODULE;
+if (!captureModule) throw new Error('Set SECONDSHOW_CAPTURE_MODULE to the recording helper module path or file URL.');
+const {startCapture} = await import(captureModule);
 import fs from 'node:fs/promises';
 if(process.env.RUN_LIVE_DEMO!=='1')throw new Error('Explicit opt-in required.');
 const out=process.argv[2]; if(!out)throw new Error('Capture directory required.');

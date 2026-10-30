@@ -8,4 +8,4 @@ Campaign preferences, workspace import, provider evidence and recipient details 
 
 Final production screenshots are `artifacts/SecondShow-current-desktop.png` (1440 × 1000) and `artifacts/SecondShow-current-mobile.png` (390 × 844). Their source is the real application, using the Japanese Breakfast sample cohort. Both were inspected visually. A browser check at 320, 390, 768, 1024 and 1440 pixels found no horizontal overflow, no browser errors, and a visible review action. Evidence is saved in `artifacts/SecondShow-screenshots.verification.json`.
 
-The full sample journey and live-provider mocks pass browser tests. No actual live-provider success is claimed, and public publication remains unauthorized.
+The sample journey and live-provider mocks passed browser tests. Separate live-provider tests are documented in [NEBIUS.md](NEBIUS.md) and [VALIDATION.md](VALIDATION.md); their single-candidate result does not establish comparative ranking quality.
