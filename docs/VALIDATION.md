@@ -1,6 +1,6 @@
 # Validation record
 
-Verified locally on October 29–30, 2026. Tests use synthetic records and mocked upstream responses unless stated otherwise.
+The following historical checks were run locally on October 29–30, 2026, before removal of the application quota guard. They use synthetic records and mocked upstream responses unless stated otherwise; they do not verify the changed guard.
 
 ## Executed checks
 
@@ -41,13 +41,13 @@ With user authorization, the existing IncidentCourt Nebius key and explicit `nvi
 
 Eight model-adapter tests also use Nebius fixtures, and the orchestration HTTP mock verifies alias-only prompts, slash-containing model IDs and the assistant/tool conversation. The previously observed missing-configuration response remains documented in `artifacts/SecondShow-nebius-configuration-check.json` as historical evidence, not the current configuration.
 
-Live production routes additionally require the exact allowed HTTPS origin, trusted Vercel IP headers, and configured shared Upstash quota credentials/salt/budget. The code atomically reserves provider-call units and concurrent leases, and refuses calls when configuration or Redis is unavailable. Those Redis operations were mocked, not live tested. The quota is a request-count bound, not a dollar spending cap. Sample-only public deployment keeps live routes disabled and needs no provider/Redis service.
+The earlier production quota guard used shared Upstash operations that were mocked, not live tested. The application quota and Redis requirement have since been removed. Production live routes require Vercel and an exact allowed HTTPS origin; the origin check is not authentication. The application has no shared quota or rate limit, and public live requests can incur provider charges. Configure provider account spending limits and monitor usage. The hosted live-provider flow and the changed guard require separate verification.
 
 ## Remaining product limits
 
-The model executes a fixed bounded inspect-and-propose task, rather than arbitrary natural-language campaign interpretation. It never approves, sends, grants consent, changes price or invents catalog events. Native Node tests, explicit runtime validators, CSS and npm are used in place of the plan's default Vitest/Zod/Tailwind/pnpm choices. The npm lockfile is included as a local deliverable; no Git repository has been published.
+The model executes a fixed bounded inspect-and-propose task, rather than arbitrary natural-language campaign interpretation. It never approves, sends, grants consent, changes price or invents catalog events. Native Node tests, explicit runtime validators, CSS and npm are used in place of the plan's default Vitest/Zod/Tailwind/pnpm choices. The npm lockfile is included; the public repository is https://github.com/Xuefeng-Zhu/SecondShow.
 
-There is no evidence of conversion lift, ranking superiority, paid demand or product-market fit. CSV inventory is a snapshot, not a reserved seat. Imported data is synthetic/anonymized only, and this one-venue MVP accepts USD prices. No delivery connector, payment processing, public deployment or Devpost submission has occurred. Public deployment/repository publication still requires a clear destination and explicit authorization.
+There is no evidence of conversion lift, ranking superiority, paid demand or product-market fit. CSV inventory is a snapshot, not a reserved seat. Imported data is synthetic/anonymized only, and this one-venue MVP accepts USD prices. There is no delivery connector or payment processing. The public sample-mode deployment was accessible on October 30; that does not verify the hosted live-provider flow or a Devpost submission.
 
 ## Invitation-copy regression (October 30)
 

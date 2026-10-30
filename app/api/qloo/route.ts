@@ -2,7 +2,7 @@ import { QlooError, rankArtists, searchArtist } from '../../../src/server/qloo';
 import { acquireLive, readJson } from '../../../src/server/live-guard';
 export const runtime = 'nodejs';
 export async function POST(request: Request) {
-  const release = await acquireLive(request,1); if (release instanceof Response) return release;
+  const release = await acquireLive(request); if (release instanceof Response) return release;
   try {
     let body: unknown; try { body=await readJson(request,8192); } catch (error) { throw new QlooError('invalid_input',error instanceof Error ? error.message : 'Invalid request.'); }
     if (!body || typeof body !== 'object' || Array.isArray(body)) throw new QlooError('invalid_input','Invalid JSON body.');

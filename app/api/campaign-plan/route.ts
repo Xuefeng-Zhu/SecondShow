@@ -4,7 +4,7 @@ import { PlannerError, assertPlannerConfigured } from '../../../src/server/plann
 import { acquireLive, readJson } from '../../../src/server/live-guard';
 export const runtime = 'nodejs';
 export async function POST(request: Request) {
-  const release = await acquireLive(request, 3); if (release instanceof Response) return release;
+  const release = await acquireLive(request); if (release instanceof Response) return release;
   try {
     let input: unknown; try { input = await readJson(request); } catch (error) { return Response.json({error:{code:'invalid_input',message:error instanceof Error ? error.message : 'Invalid request.'}},{status:400}); }
     if (!process.env.QLOO_API_KEY) throw new PlannerError('unconfigured','The Qloo server credential is required for live planning.');

@@ -18,7 +18,7 @@ See `artifacts/SecondShow-qloo-live-verification.json` for the final public-enti
 
 The October 30 live test used `nvidia/nemotron-3-super-120b-a12b`; Qloo ranking and both Nebius tool calls succeeded in a direct orchestration run. A subsequent local browser run passed live identity searches, campaign planning, human approval and export enablement with fictional booking and sample data. See NEBIUS.md and `artifacts/SecondShow-nebius-live-ui-verification.json`. The adapter uses Nebius Chat Completions and does not read OpenAI or OpenRouter credentials.
 
-Production live calls additionally require the trusted deployment, exact origin and shared quota configuration described in `.env.example`; Redis has not been live tested. As of October 30, no public deployment or final submission had been verified.
+Production live calls additionally require the Vercel deployment and exact allowed HTTPS origin described in `.env.example`. The origin check is not authentication, and the application no longer enforces a shared quota or rate limit. Public live requests can incur provider charges; configure provider account spending limits and monitor usage. A hosted live-provider flow remains to be verified.
 
 ## Official references
 
