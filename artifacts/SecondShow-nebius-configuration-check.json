@@ -1,0 +1,13 @@
+{
+  "verifiedAt": "2026-10-30T06:43:55.081Z",
+  "test": "actual same-origin route with no Nebius credential",
+  "status": 503,
+  "body": {
+    "error": {
+      "code": "unconfigured",
+      "message": "The Nebius planner requires valid NEBIUS_API_KEY and explicit NEBIUS_MODEL server configuration."
+    }
+  },
+  "paidInferencePerformed": false,
+  "note": "Configuration guard returns before orchestration; no model request or Qloo ranking is made."
+}

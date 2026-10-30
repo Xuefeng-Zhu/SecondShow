@@ -1,0 +1,23 @@
+{
+  "verifiedAt": "2026-10-30",
+  "provider": "Nebius Token Factory",
+  "endpoint": "https://api.tokenfactory.nebius.com/v1/chat/completions",
+  "persistentNebiusConfigurationPerformed": false,
+  "paidLiveInferencePerformed": false,
+  "credentialPresenceCheck": "No Nebius credential variables found in current process, project files, standard configuration directories or shell declarations; values never emitted.",
+  "tests": {
+    "unitPassed": 44,
+    "browserPassed": 5,
+    "lint": "passed",
+    "typecheck": "passed",
+    "build": "passed",
+    "liveSmoke": "not executed; opt-in guards returned exit 2"
+  },
+  "configurationNeeded": [
+    "NEBIUS_API_KEY from an approved secure source",
+    "NEBIUS_MODEL: explicit account-available function-calling model",
+    "specific confirmation for persistent project access and paid live testing"
+  ],
+  "qlooConfigRetained": true,
+  "projectEnvMode": "0o600"
+}

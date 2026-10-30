@@ -1,0 +1,100 @@
+import {chromium,expect} from '@playwright/test';
+import {startCapture} from '/Users/frank/.codex/plugins/cache/openai-curated-remote/demo-videos/0.3.1/skills/create-demo-video/scripts/capture.mjs';
+import fs from 'node:fs/promises';
+const out=process.argv[2];
+if(!out)throw new Error('Capture directory required');
+const journal=[];
+const browser=await chromium.launch({headless:true});
+let capture;
+let outcome='Recording did not complete.';
+async function scene(name,page,hold=5000){
+ const start=Date.now();
+ await page.waitForTimeout(350);
+ journal.push({name,visibleEpochMs:Date.now(),captureNotes:'Scene observed after UI expectation and 350 ms settle.'});
+ console.log(name);
+ await page.waitForTimeout(hold);
+ journal.at(-1).holdEndedEpochMs=Date.now();
+ return start;
+}
+async function click(locator,page){
+ await locator.scrollIntoViewIfNeeded();
+ const box=await locator.boundingBox();
+ if(!box)throw new Error('Target not visible');
+ await page.mouse.move(box.x+box.width/2,box.y+box.height/2,{steps:8});
+ await page.waitForTimeout(250);
+ await locator.click();
+}
+try{
+ const page=await browser.newPage({viewport:{width:1600,height:900},deviceScaleFactor:1});
+ await page.goto('http://127.0.0.1:3000');
+ await page.getByRole('button',{name:/Load sample venue/}).click();
+ await expect(page.getByRole('heading',{name:'Build the next invitation',exact:true})).toBeVisible();
+ await page.waitForTimeout(500);
+ capture=await startCapture(page,out);
+ await page.mouse.move(1400,130,{steps:6});
+ await scene('Sample venue and fictional upcoming lineup',page,5500);
+ await click(page.getByRole('button',{name:'Draft campaign',exact:true}),page);
+ await expect(page.getByRole('status').first()).toContainText('Draft ready');
+ await page.getByRole('heading',{name:'The next two shows',exact:true}).scrollIntoViewIfNeeded();
+ await scene('Deterministic draft ready for human review',page,5000);
+ await click(page.getByRole('button',{name:'Review invitation',exact:true}),page);
+ await click(page.getByRole('button',{name:'Evidence +',exact:true}),page);
+ await scene('Sample evidence and explicit exclusions',page,5000);
+ await click(page.getByRole('button',{name:'Evidence −',exact:true}),page);
+ await click(page.locator('.audience-details summary'),page);
+ const rows=page.getByRole('table').last().getByRole('row');
+ await rows.nth(1).scrollIntoViewIfNeeded();
+ const before=await rows.nth(1).innerText();
+ await scene('First buyer has two feasible recommendations',page,5000);
+ await click(page.getByRole('button',{name:'Mark top recommendation sold out',exact:true}),page);
+ await expect(page.getByRole('status').first()).toContainText('sold out');
+ await scene('Availability change invalidates the draft',page,3500);
+ await click(page.locator('.preferences summary'),page);
+ await click(page.getByRole('button',{name:'Replan draft',exact:true}),page);
+ await expect(page.getByRole('status').first()).toContainText('Draft ready');
+ const after=await rows.nth(1).innerText();
+ if(before===after)throw new Error('Replan did not change the first recommendation');
+ await rows.nth(1).scrollIntoViewIfNeeded();
+ await scene('Replan replaces the sold-out show',page,6000);
+ await click(page.getByRole('button',{name:'Approve draft',exact:true}),page);
+ await expect(page.getByRole('status').first()).toContainText('Draft approved');
+ await scene('Human approval enables export',page,4000);
+ const downloaded=page.waitForEvent('download');
+ await click(page.getByRole('button',{name:'Export campaign',exact:true}),page);
+ const file=await downloaded;
+ await file.saveAs(out+'/exported-campaign.csv');
+ await expect(page.getByRole('status').first()).toContainText('Messages have not been sent');
+ await scene('CSV exported; messages remain unsent',page,4500);
+ await click(page.getByRole('button',{name:'Preview',exact:true}).first(),page);
+ await expect(page.getByRole('heading',{name:'Your next night out.',exact:true})).toBeVisible();
+ await page.mouse.wheel(0,-1200);
+ await scene('Recipient preview shows available shows and prices',page,7000);
+ await click(page.getByRole('button',{name:'Preview sample checkout ↗',exact:true}).first(),page);
+ await expect(page.getByRole('region',{name:'Simulated ticket page',exact:true})).toBeVisible();
+ await page.mouse.wheel(0,-1000);
+ await scene('Simulated checkout is not a payment or purchase',page,5000);
+ await click(page.getByRole('button',{name:'Close ticket preview',exact:true}),page);
+ await page.getByRole('region',{name:'Operator demo controls',exact:true}).scrollIntoViewIfNeeded();
+ await scene('A separate operator control records a fictional outcome',page,5500);
+ await click(page.getByRole('button',{name:'Record sample second purchase',exact:true}),page);
+ await expect(page.getByRole('status').first()).toContainText('Sample second purchase recorded');
+ await scene('Sample purchase is recorded at the current demo clock',page,3500);
+ await click(page.getByRole('button',{name:/Outcomes/}),page);
+ await page.mouse.wheel(0,-2000);
+ await expect(page.getByRole('heading',{name:'Observed, not attributed.',exact:true})).toBeVisible();
+ await scene('Incomplete follow-up has no mature repeat rate',page,6000);
+ await click(page.getByTestId('advance-clock'),page);
+ await expect(page.getByRole('status').first()).toContainText('advanced 30 days');
+ await expect(page.getByText('5%',{exact:true})).toBeVisible();
+ await scene('Simulated time matures the frozen cohort: one repeat purchase',page,9000);
+ outcome='Completed the actual zero-key sample journey: deterministic draft, sold-out replan, human approval, CSV export without delivery, recipient/simulated checkout, current-clock sample purchase, incomplete follow-up, then explicit 30-day demo-clock advance. Final mature rate is 1/20 (5%), observational and fictional. No live provider call occurred.';
+ await capture.stop('SecondShow sample workflow',outcome);capture=null;
+ await fs.writeFile(out+'/scene-journal.json',JSON.stringify({clock:'Unix epoch milliseconds from Date.now; scene settle times, not input timestamps',journal,outcome},null,2));
+ console.log('CAPTURE COMPLETE');
+}catch(error){
+ outcome='Walkthrough failed: '+(error instanceof Error?error.message:String(error));
+ throw error;
+}finally{
+ if(capture){await capture.stop('SecondShow sample workflow',outcome);await fs.writeFile(out+'/scene-journal.json',JSON.stringify({journal,outcome},null,2));}
+ await browser.close();
+}

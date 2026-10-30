@@ -1,0 +1,30 @@
+{
+  "name": "secondshow",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test src/*.test.ts tests/*.test.ts",
+    "lint": "eslint .",
+    "test:e2e": "playwright test",
+    "smoke:live": "node --env-file-if-exists=.env.local scripts/live-smoke.ts"
+  },
+  "dependencies": {
+    "next": "16.3.8",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.3",
+    "typescript": "6.0.3"
+  },
+  "type": "module"
+}

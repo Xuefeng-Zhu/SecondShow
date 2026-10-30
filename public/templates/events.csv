@@ -1,0 +1,2 @@
+id,artist,startsAt,timezone,priceCents,currency,status,remaining,inventoryAsOf,catalogVersion,checkoutUrl,genre
+show_001,Sample Artist,2026-11-10T20:00:00Z,America/Los_Angeles,2500,USD,on_sale,45,2026-10-29T12:00:00Z,1,https://example.com/synthetic-ticket,indie

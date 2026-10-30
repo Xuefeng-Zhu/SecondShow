@@ -1,0 +1,131 @@
+{
+  "verifiedAt": "2026-10-30T06:23:59.668Z",
+  "source": "actual local application; real Qloo responses",
+  "searches": [
+    {
+      "name": "Japanese Breakfast",
+      "status": 200,
+      "error": null,
+      "candidates": [
+        {
+          "id": "AA21934D-3A6E-4973-983F-28604C44E3AC",
+          "name": "Japanese Breakfast",
+          "types": [
+            "urn:entity:artist"
+          ]
+        },
+        {
+          "id": "49E83CB9-58C6-4313-B0E0-4FB2B7BA6480",
+          "name": "The Japanese House",
+          "types": [
+            "urn:entity:artist"
+          ]
+        },
+        {
+          "id": "200499A4-5CCF-4147-9722-FB6869749980",
+          "name": "Half Japanese",
+          "types": [
+            "urn:entity:artist"
+          ]
+        },
+        {
+          "id": "E76C829A-1773-4035-B38B-F3E165200605",
+          "name": "The Japanese Popstars",
+          "types": [
+            "urn:entity:artist"
+          ]
+        },
+        {
+          "id": "17BE59A3-D4CA-4731-93C6-6AA3D2C31BB7",
+          "name": "Breakfast",
+          "types": [
+            "urn:entity:artist"
+          ]
+        }
+      ],
+      "confirmedId": "AA21934D-3A6E-4973-983F-28604C44E3AC"
+    },
+    {
+      "name": "Alvvays",
+      "status": 200,
+      "error": null,
+      "candidates": [
+        {
+          "id": "A854F678-4242-4C4B-A21C-38EE521C885B",
+          "name": "Alvvays",
+          "types": [
+            "urn:entity:artist"
+          ]
+        }
+      ],
+      "confirmedId": "A854F678-4242-4C4B-A21C-38EE521C885B"
+    }
+  ],
+  "rank": {
+    "status": 200,
+    "body": {
+      "mode": "live",
+      "retrievedAt": "2026-10-30T06:24:03.777Z",
+      "seedIds": [
+        "AA21934D-3A6E-4973-983F-28604C44E3AC"
+      ],
+      "candidateIds": [
+        "A854F678-4242-4C4B-A21C-38EE521C885B"
+      ],
+      "ranked": [
+        {
+          "id": "A854F678-4242-4C4B-A21C-38EE521C885B",
+          "rank": 1,
+          "explanation": {
+            "signal.interests.entities": [
+              {
+                "entity_id": "AA21934D-3A6E-4973-983F-28604C44E3AC",
+                "score": 1
+              }
+            ]
+          }
+        }
+      ],
+      "catalogVersion": "authorized-real-qloo-smoke-v1"
+    }
+  },
+  "cache": {
+    "status": 200,
+    "body": {
+      "mode": "cached_live",
+      "retrievedAt": "2026-10-30T06:24:03.777Z",
+      "seedIds": [
+        "AA21934D-3A6E-4973-983F-28604C44E3AC"
+      ],
+      "candidateIds": [
+        "A854F678-4242-4C4B-A21C-38EE521C885B"
+      ],
+      "ranked": [
+        {
+          "id": "A854F678-4242-4C4B-A21C-38EE521C885B",
+          "rank": 1,
+          "explanation": {
+            "signal.interests.entities": [
+              {
+                "entity_id": "AA21934D-3A6E-4973-983F-28604C44E3AC",
+                "score": 1
+              }
+            ]
+          }
+        }
+      ],
+      "catalogVersion": "authorized-real-qloo-smoke-v1"
+    }
+  },
+  "campaignPlanning": {
+    "status": 503,
+    "error": {
+      "code": "unconfigured",
+      "message": "Qloo and model server credentials are required for live planning."
+    },
+    "otherProviderConfigured": false
+  },
+  "secretExposed": false,
+  "result": "failed",
+  "error": "expect(locator).toContainText(expected) failed\n\nLocator: getByRole('alert')\nExpected substring: \"model server credentials\"\nError: strict mode violation: getByRole('alert') resolved to 2 elements:\n    1) <p role=\"alert\" class=\"LiveTaste-module__SJy1iW__error\">Qloo and model server credentials are required fo…</p> aka getByText('Qloo and model server')\n    2) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\"></div> aka locator('[id=\"__next-route-announcer__\"]')\n\nCall log:\n  - Expect \"toContainText\" getByRole('alert') with timeout 5000ms\n  - waiting for getByRole('alert')\n"
+}

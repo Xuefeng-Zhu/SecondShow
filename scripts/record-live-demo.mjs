@@ -1,0 +1,90 @@
+/** Explicit opt-in: real Qloo and Nebius calls; uses only fictional sample data. */
+import {chromium,expect} from '@playwright/test';
+import {startCapture} from '/Users/frank/.codex/plugins/cache/openai-curated-remote/demo-videos/0.3.1/skills/create-demo-video/scripts/capture.mjs';
+import fs from 'node:fs/promises';
+if(process.env.RUN_LIVE_DEMO!=='1')throw new Error('Explicit opt-in required.');
+const out=process.argv[2]; if(!out)throw new Error('Capture directory required.');
+const journal=[];
+const browser=await chromium.launch({headless:true}); let capture; let outcome='Recording did not complete.';
+async function scene(name,page,hold=4000){await page.waitForTimeout(300); journal.push({name,visibleEpochMs:Date.now()}); console.log(name); await page.waitForTimeout(hold);}
+async function click(locator,page){await locator.scrollIntoViewIfNeeded(); const box=await locator.boundingBox(); if(!box)throw new Error('Target not visible'); await page.mouse.move(box.x+box.width/2,box.y+box.height/2,{steps:8}); await page.waitForTimeout(250); await locator.click();}
+try {
+ const page=await browser.newPage({viewport:{width:1600,height:900},deviceScaleFactor:1});
+ await page.goto('http://127.0.0.1:3000');
+ await page.getByRole('button',{name:/Load sample venue/}).click();
+ await expect(page.getByRole('heading',{name:'Build the next invitation',exact:true})).toBeVisible();
+ capture=await startCapture(page,out); await page.mouse.move(1400,130,{steps:6});
+ await scene('Fictional sample venue and customers',page,4500);
+ await page.getByLabel('Prior show cohort').selectOption('past-1');
+ await page.getByLabel('Window days').fill('6');
+ await page.getByLabel('Planning mode').selectOption('live');
+ await scene('Select live Qloo and Nebius planning',page,4000);
+ await click(page.getByRole('button',{name:'Draft campaign',exact:true}),page);
+ await expect(page.getByRole('status').first()).toContainText('Cohort created');
+ await click(page.getByRole('button',{name:'Review invitation',exact:true}),page);
+ await expect(page.getByLabel('Invitation copy')).toHaveValue('Awaiting live proposal.');
+ await expect(page.getByRole('button',{name:'Approve draft',exact:true})).toBeDisabled();
+ await expect(page.getByRole('button',{name:'Export campaign',exact:true})).toBeDisabled();
+ await click(page.getByText('Live providers & artist evidence',{exact:true}),page);
+ for(const [eventId,name] of [['past-1','Japanese Breakfast'],['show-1','Alvvays']]){
+  await page.getByLabel('Artist to resolve').selectOption(eventId);
+  await scene(`Search real Qloo for ${name}`,page,2000);
+  const pending=page.waitForResponse(r=>r.url().endsWith('/api/qloo')&&r.request().method()==='POST');
+  await click(page.getByRole('button',{name:'Search Qloo',exact:true}),page);
+  const response=await pending; const body=await response.json();
+  if(!response.ok())throw new Error(`Qloo search failed: ${body.error?.code||response.status()}`);
+  const index=body.candidates.findIndex(c=>c.name.toLowerCase()===name.toLowerCase()&&c.types.includes('urn:entity:artist'));
+  if(index<0)throw new Error('Exact artist identity was not returned.');
+  await scene(`Qloo identity result: ${name}`,page,3000);
+  await click(page.getByRole('button',{name:'Confirm identity',exact:true}).nth(index),page);
+  await expect(page.getByLabel('Artist to resolve').locator(`option[value="${eventId}"]`)).toContainText('confirmed');
+ }
+ await scene('Confirmed artist identities',page,3000);
+ const pending=page.waitForResponse(r=>r.url().endsWith('/api/campaign-plan')&&r.request().method()==='POST');
+ await click(page.getByTestId('live-plan'),page);
+ const response=await pending; const body=await response.json();
+ if(!response.ok())throw new Error(`Live planning failed: ${body.error?.code||response.status()}`);
+ expect(body.taste.mode).toBe('live'); expect(body.planner.mode).toBe('live_model'); expect(body.eventIds).toContain('show-1');
+ await expect(page.getByText('Live proposal validated. Human approval required.',{exact:true})).toBeVisible();
+ await scene('Live Qloo ranking and Nebius proposal succeeded',page,6500);
+ const copy=page.getByLabel('Invitation copy');
+ await expect(copy).toHaveValue('Thanks for joining us. Here are some shows you might enjoy next.');
+ const invitation=await copy.inputValue();
+ if(!invitation.trim() || /^awaiting\s+live\s+proposal[.!…]*$/iu.test(invitation.trim()))throw new Error('Invitation copy is incomplete.');
+ await copy.scrollIntoViewIfNeeded();
+ await scene('Review complete application invitation template before approval',page,5000);
+ await click(page.getByText('Review audience & recipient previews',{exact:true}),page);
+ await page.getByRole('table').last().scrollIntoViewIfNeeded();
+ await scene('Review recommendation for the fictional cohort',page,5000);
+ await click(page.getByRole('button',{name:'Approve draft',exact:true}),page);
+ await expect(page.getByRole('button',{name:'Export campaign',exact:true})).toBeEnabled();
+ await scene('Human approval enables export',page,4500);
+ const downloaded=page.waitForEvent('download');
+ await click(page.getByRole('button',{name:'Export campaign',exact:true}),page);
+ const download=await downloaded;
+ const csv=await fs.readFile(await download.path(),'utf8');
+ if(!csv.includes(invitation) || /awaiting\s+live\s+proposal/iu.test(csv))throw new Error('Exported invitation copy is incomplete.');
+ await expect(page.getByRole('status').first()).toContainText('Messages have not been sent');
+ await scene('Export created; no messages sent',page,5000);
+ await click(page.getByRole('button',{name:'Preview',exact:true}).first(),page);
+ await expect(page.getByRole('heading',{name:'Your next night out.',exact:true})).toBeVisible();
+ await page.mouse.wheel(0,-1200); await scene('Fictional recipient preview',page,5500);
+ await click(page.getByRole('button',{name:'Preview sample checkout ↗',exact:true}).first(),page);
+ await expect(page.getByRole('region',{name:'Simulated ticket page',exact:true})).toBeVisible();
+ await page.mouse.wheel(0,-1000); await scene('Sample checkout; no payment',page,5000);
+ await click(page.getByRole('button',{name:'Close ticket preview',exact:true}),page);
+ await page.getByRole('region',{name:'Operator demo controls',exact:true}).scrollIntoViewIfNeeded();
+ await click(page.getByRole('button',{name:'Record sample second purchase',exact:true}),page);
+ await expect(page.getByRole('status').first()).toContainText('Sample second purchase recorded');
+ await scene('Record a fictional sample purchase',page,4000);
+ await click(page.getByRole('button',{name:/Outcomes/}),page);
+ await page.mouse.wheel(0,-2000);
+ await expect(page.getByRole('heading',{name:'Observed, not attributed.',exact:true})).toBeVisible();
+ await scene('Outcome window is incomplete',page,5000);
+ await click(page.getByTestId('advance-clock'),page);
+ await expect(page.getByRole('status').first()).toContainText('advanced 30 days');
+ await scene('Advance sample clock; outcomes are observational',page,7000);
+ outcome='Completed an actual live Qloo identity search and ranking plus Nebius model proposal using a fictional sample venue, fictional booking and fictional customers. The neutral application invitation template was reviewed, approved, and verified in the CSV export without sending messages; checkout and outcomes were explicitly simulated.';
+ await capture.stop('SecondShow live-provider demo',outcome);capture=null;
+} catch(error) {outcome='Walkthrough failed: '+(error instanceof Error?error.message.split('\n')[0]:'unknown'); process.exitCode=1; console.error(outcome);}
+finally {if(capture)await capture.stop('SecondShow live-provider demo',outcome); await fs.writeFile(out+'/scene-journal.json',JSON.stringify({clock:'Date.now epoch milliseconds; scene observation, not input timestamp',journal,outcome},null,2)); await browser.close();}

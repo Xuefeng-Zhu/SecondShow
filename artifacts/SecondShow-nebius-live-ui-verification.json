@@ -1,0 +1,25 @@
+{
+  "verifiedAt": "2026-10-30T07:18:32.367Z",
+  "source": "local browser and live Qloo/Nebius",
+  "searches": [
+    {
+      "name": "Japanese Breakfast",
+      "status": 200
+    },
+    {
+      "name": "Alvvays",
+      "status": 200
+    }
+  ],
+  "result": "passed",
+  "plan": {
+    "status": 200,
+    "error": null,
+    "qlooMode": "live",
+    "plannerMode": "live_model",
+    "proposedCount": 1,
+    "warning": null
+  },
+  "humanApprovalRequired": true,
+  "exportEnabledAfterApproval": true
+}

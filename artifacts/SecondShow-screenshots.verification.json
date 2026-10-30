@@ -1,0 +1,46 @@
+{
+  "actualApplication": true,
+  "mode": "Fictional sample; deterministic baseline; nothing sent",
+  "cohort": "Japanese Breakfast",
+  "sizes": [
+    {
+      "width": 320,
+      "scrollWidth": 320
+    },
+    {
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "width": 768,
+      "scrollWidth": 768
+    },
+    {
+      "width": 1024,
+      "scrollWidth": 1024
+    },
+    {
+      "width": 1440,
+      "scrollWidth": 1440
+    }
+  ],
+  "browserErrors": [],
+  "files": [
+    "SecondShow-current-desktop.png",
+    "SecondShow-current-mobile.png"
+  ],
+  "library_files": [
+    {
+      "file_name": "SecondShow-current-desktop.png",
+      "library_file_id": "libfile_7a0171d3d9048191ae14d57f58a61403",
+      "current_version_number": 1,
+      "status": "succeeded"
+    },
+    {
+      "file_name": "SecondShow-current-mobile.png",
+      "library_file_id": "libfile_68efa2836abc8191b5a2ef40fdecfaa9",
+      "current_version_number": 0,
+      "status": "succeeded"
+    }
+  ]
+}

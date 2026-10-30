@@ -1,0 +1,2 @@
+id,customerId,eventId,purchasedAt,status,netCents,updatedAt
+order_001,anon_001,show_001,2026-10-01T12:00:00Z,paid,2500,2026-10-01T12:00:00Z

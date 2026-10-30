@@ -1,0 +1,16 @@
+{
+  "verifiedAt": "2026-10-30T07:17:40.230Z",
+  "source": "direct real-provider orchestrator; fictional event, confirmed public artist IDs",
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "calls": [
+    { "provider": "Qloo", "status": 200 },
+    { "provider": "Nebius", "status": 200, "usage": { "prompt_tokens": 373, "completion_tokens": 26, "total_tokens": 399 } },
+    { "provider": "Nebius", "status": 200, "usage": { "prompt_tokens": 473, "completion_tokens": 68, "total_tokens": 541 } }
+  ],
+  "result": "passed",
+  "qlooMode": "live",
+  "plannerMode": "live_model",
+  "proposalCount": 1,
+  "warning": null,
+  "note": "Usage applies to this orchestrator run only; separate browser verification usage was not captured. No message or purchase was performed."
+}

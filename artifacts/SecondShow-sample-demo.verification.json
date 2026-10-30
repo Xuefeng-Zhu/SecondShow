@@ -1,0 +1,28 @@
+{
+  "duration": 87.084,
+  "width": 1600,
+  "height": 900,
+  "ended": true,
+  "currentTime": 87.084,
+  "error": null,
+  "played": [
+    [
+      0,
+      87.084
+    ]
+  ],
+  "method": "Continuous browser playback at normal speed with inspected screenshots",
+  "audio": "silent",
+  "bytes": 4160151,
+  "sha256": "6011fa37d22c55b52e293c80966cd07c4ae9d6391e7f2fd4627f06ca13c11e91",
+  "sample_only": true,
+  "live_provider_calls": 0,
+  "codec": "VP9/yuv420p WebM",
+  "fps": 60,
+  "layout": "Implemented option 2 queue design",
+  "workflow": "draft, sold-out replan, human approval, actual CSV export, recipient and simulated checkout, current-clock fictional purchase, explicit observation-clock advance",
+  "library_file_id": "libfile_11b5eddec43881918a3cb3f2f4af4fc6",
+  "library_update_status": "succeeded",
+  "library_metadata_persisted": true,
+  "library_current_version_number": 1
+}
